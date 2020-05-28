@@ -4,14 +4,14 @@ public enum Cell {
     WALL("\u2588\u2588"),
     SPACE("  ");
 
-    private final String value;
+    private final String s;
 
-    private Cell(String value){
-        this.value = value;
+    private Cell(String s) {
+        this.s = s;
     }
 
     @Override
     public String toString() {
-        return value;
+        return  s;
     }
 }
