@@ -151,13 +151,17 @@ public class Maze {
 
        for(int row = 0 ; row < rows ; row++){
            for(int col = 0 ; col < cols ; col++ ) {
-               if(evenCol && d_col == col)
+               if(evenCol && d_col == col) {
+
                    System.out.print(grid[row][col]);
+               }
                System.out.print(grid[row][col]);
            }
            if (evenRow && row == d_col){
                System.out.println();
                for(int col = 0 ; col < cols ; col++ ) {
+                   if (evenCol && col == d_col)
+                       System.out.print(grid[row][col]);
                    System.out.print(grid[row][col]);
                }
            }
