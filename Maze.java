@@ -144,28 +144,52 @@ public class Maze {
     public void sortEdgesByWeight() {
         Collections.sort(edges);
     }
-
-    public void show(){
+    public String getMaze(){
         int d_col = 1;
         int d_row = 1;
+        String result = "";
+        for(int row = 0 ; row < rows ; row++){
+            for(int col = 0 ; col < cols ; col++ ) {
+                if(evenCol && d_col == col) {
 
-       for(int row = 0 ; row < rows ; row++){
-           for(int col = 0 ; col < cols ; col++ ) {
-               if(evenCol && d_col == col) {
-
-                   System.out.print(grid[row][col]);
-               }
-               System.out.print(grid[row][col]);
-           }
-           if (evenRow && row == d_col){
-               System.out.println();
-               for(int col = 0 ; col < cols ; col++ ) {
-                   if (evenCol && col == d_col)
-                       System.out.print(grid[row][col]);
-                   System.out.print(grid[row][col]);
-               }
-           }
-           System.out.println();
-       }
+                     result += grid[row][col];
+                }
+                result += grid[row][col];
+            }
+            if (evenRow && row == d_col){
+                result += System.lineSeparator();
+                for(int col = 0 ; col < cols ; col++ ) {
+                    if (evenCol && col == d_col)
+                       result += grid[row][col];
+                   result += grid[row][col];
+                }
+            }
+            result+= System.lineSeparator();
+        }
+       return result;
+    }
+    public  void show(){
+        System.out.println(getMaze());
+//        int d_col = 1;
+//        int d_row = 1;
+//
+//       for(int row = 0 ; row < rows ; row++){
+//           for(int col = 0 ; col < cols ; col++ ) {
+//               if(evenCol && d_col == col) {
+//
+//                   System.out.print(grid[row][col]);
+//               }
+//               System.out.print(grid[row][col]);
+//           }
+//           if (evenRow && row == d_col){
+//               System.out.println();
+//               for(int col = 0 ; col < cols ; col++ ) {
+//                   if (evenCol && col == d_col)
+//                       System.out.print(grid[row][col]);
+//                   System.out.print(grid[row][col]);
+//               }
+//           }
+//           System.out.println();
+//       }
     }
 }
