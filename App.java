@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class App {
-    String   board;
+    Maze board;
     private Scanner scanner;
 
 
@@ -15,7 +15,7 @@ public class App {
 
 
     public void start() {
-        while(true) {
+        while (true) {
             String options = getOptions();
             System.out.println(options);
             int option;
@@ -31,18 +31,22 @@ public class App {
                     int size = Integer.parseInt(scanner.nextLine());
                     Maze maze = new Maze(size, size);
                     maze.make();
-                    board = maze.getMaze();
-                    System.out.println(board);
+                    maze.show();
+                    board = maze;
                     break;
                 case 2:
                     load();
                     break;
-                    case 3:
-                        save();
-                        break;
+                case 3:
+                    save();
+                    break;
                 case 4:
-                    System.out.println(board);
-
+                    board.make();
+                    board.show();
+                    break;
+                case 5:
+                    board.search(0 , 1);
+                    board.show();
 
 
             }
@@ -52,24 +56,31 @@ public class App {
 
     private void save() {
         String nameFile = scanner.nextLine();
-        try(PrintWriter out = new PrintWriter(new File(nameFile))) {
-            out.print(board);
-
+        try (
+                ObjectOutputStream out = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(new File(nameFile)))))
+        {
+            out.writeObject(board);
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void load(){
+    private void load() {
 
         String namefile = scanner.nextLine();
-        try(BufferedReader in = new BufferedReader(new FileReader(new File(namefile)))) {
+        try (
+                ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(new File(namefile))))
 
-           board = in.lines().collect(Collectors.joining(System.lineSeparator()));
+        ) {
+            board = (Maze) in.readObject();
         } catch (FileNotFoundException e) {
-            System.out.printf("The file %s does not exist",namefile);
+            System.out.printf("The file %s does not exist", namefile);
         } catch (IOException e) {
             System.out.println("Cannot loadthe maze. It has an invalid format");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -77,10 +88,10 @@ public class App {
     private boolean valid(int option) {
         int maxOption = 2;
         if (board != null) {
-            maxOption = 4;
+            maxOption = 5;
         }
-           boolean validOption  =  option >=0 && option <= maxOption;
-        if (!validOption){
+        boolean validOption = option >= 0 && option <= maxOption;
+        if (!validOption) {
             System.out.println("Incorrect option. Please try again");
         }
         return validOption;
@@ -95,10 +106,12 @@ public class App {
                 .append(System.lineSeparator())
                 .append("2. Load a maze")
                 .append(System.lineSeparator());
-        if (board != null){
+        if (board != null) {
             builder.append("3. Save the maze")
                     .append(System.lineSeparator())
                     .append("4. Display the maze")
+                    .append(System.lineSeparator())
+                    .append("5. Find the escape")
                     .append(System.lineSeparator());
             builder.append("0. Exit");
 

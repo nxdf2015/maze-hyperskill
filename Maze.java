@@ -3,13 +3,15 @@ package maze;
 
 
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Supplier;
 
-public class Maze {
+public class Maze implements Serializable {
+
     private final int cols;
     private final int rows;
-    private final Cell[][] grid;
+    private  Cell[][] grid;
     private boolean evenRow;
     public List<Edge> edges;
 
@@ -17,6 +19,7 @@ public class Maze {
     private int[] ids;
 
     private   boolean evenCol;
+    private boolean[][] explored;
 
     {
         generator = new Random();
@@ -61,8 +64,8 @@ public class Maze {
                 grid[row][col] = value;
             }
         }
-        grid[0][1]=Cell.SPACE;
-        grid[rows-2][cols-1]=Cell.SPACE;
+        grid[0][1]=Cell.ENTRANCE;
+        grid[rows-2][cols-1]=Cell.EXIT;
     }
 
     public void setEdges(){
@@ -144,6 +147,7 @@ public class Maze {
     public void sortEdgesByWeight() {
         Collections.sort(edges);
     }
+
     public String getMaze(){
         int d_col = 1;
         int d_row = 1;
@@ -168,28 +172,52 @@ public class Maze {
         }
        return result;
     }
+    private List<int[]>  neighboors(int row,int col){
+        int[][] ps = { {0,1 },{0 , -1},{ 1,0 },{-1, 0}};
+        List<int[]> point = new ArrayList<>();
+        for(int[] p : ps ){
+            if (((row + p[0 ]) >= 0 ) && ((col+p[1])  >= 0) &&
+                    ((row + p[0 ]) < rows) && ((col+p[1] ) < cols) ){
+                point.add(new int[] {row + p[0] , col + p[1] } );
+            }
+        }
+        ;
+        return  point;
+    }
+    public boolean search(int row, int col){
+          explored = new boolean[rows][cols];
+          grid[row][col] = Cell.PATH;
+          BFS(row,col);
+        return false;
+    }
+    public  boolean BFS(int row , int col){
+        explored[row][col]=true;
+
+        if (grid[row][col] == Cell.EXIT){
+           grid[row][col]=Cell.PATH;
+           return true;
+       }
+       boolean result = false;
+       for(int[] p : neighboors(row,col)){
+
+           Cell c = grid[p[0]][p[1]];
+
+           if(!explored[p[0]][p[1]]){
+
+               if(c != Cell.WALL){
+                   if (BFS(p[0],p[1])){
+
+                       grid[p[0]][p[1]] = Cell.PATH;
+                       return  true;
+                   }
+
+               }
+           }
+       }
+       return false;
+    }
     public  void show(){
         System.out.println(getMaze());
-//        int d_col = 1;
-//        int d_row = 1;
-//
-//       for(int row = 0 ; row < rows ; row++){
-//           for(int col = 0 ; col < cols ; col++ ) {
-//               if(evenCol && d_col == col) {
-//
-//                   System.out.print(grid[row][col]);
-//               }
-//               System.out.print(grid[row][col]);
-//           }
-//           if (evenRow && row == d_col){
-//               System.out.println();
-//               for(int col = 0 ; col < cols ; col++ ) {
-//                   if (evenCol && col == d_col)
-//                       System.out.print(grid[row][col]);
-//                   System.out.print(grid[row][col]);
-//               }
-//           }
-//           System.out.println();
-//       }
+
     }
 }

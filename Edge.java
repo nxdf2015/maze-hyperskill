@@ -2,7 +2,9 @@ package maze;
 
 import org.jetbrains.annotations.NotNull;
 
-public class Edge implements  Comparable<Edge> {
+import java.io.Serializable;
+
+public class Edge implements  Comparable<Edge> , Serializable {
     public final int row;
     public final int col;
     private final int weight;
